@@ -14,14 +14,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Contact c = Contact();
-    c.name = 'Marcos';
-    c.email = 'marcos.filho@antt.gov.br';
-    c.phone = '993048292';
-    c.img = 'image_test';
 
-    helper.saveContact(c).then((c) => print(c.name));
-    helper.getNumber().then((v) => print(v));
+    helper.getAllContacts().then((list) {
+      print(list);
+    });
   }
 
   @override
