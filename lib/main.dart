@@ -13,7 +13,7 @@ class PhonebookApp extends StatelessWidget {
     return MaterialApp(
         title: 'Phonebook App',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.red,
         ),
         home: HomePage());
   }
