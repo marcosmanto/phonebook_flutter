@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:phonebook_flutter/helpers/contact_helper.dart';
 import 'package:phonebook_flutter/pages/contact_page.dart';
 import 'package:phonebook_flutter/widgets/contact_card.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+enum OrderOptions { orderAZ, orderZA }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,9 +14,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final ContactHelper helper = ContactHelper();
+  final ContactHelper _helper = ContactHelper();
 
-  List<Contact> contacts = [];
+  OrderOptions _sort = OrderOptions.orderAZ;
+
+  List<Contact> _contacts = [];
 
   @override
   void initState() {
@@ -30,13 +33,19 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Contatos'),
-        actions: [],
+        actions: [
+          IconButton(
+            padding: EdgeInsets.only(right: 8),
+            onPressed: () => _toggleSort(),
+            icon: Icon(Icons.sort),
+          )
+        ],
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(10),
-        itemCount: contacts.length,
+        itemCount: _contacts.length,
         itemBuilder: (context, index) => ContactCard(
-          contact: contacts[index],
+          contact: _contacts[index],
           onClick: _showOptions,
         ),
       ),
@@ -87,9 +96,10 @@ class _HomePageState extends State<HomePage> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  helper.deleteContact(contact!.id!);
+                  _helper.deleteContact(contact!.id!);
                   setState(
-                    () => contacts.removeWhere((item) => item.id == contact.id),
+                    () =>
+                        _contacts.removeWhere((item) => item.id == contact.id),
                   );
                 },
                 child: Text(
@@ -113,15 +123,49 @@ class _HomePageState extends State<HomePage> {
     if (recContact != null) {
       // We passed a contact so thismis a edit process
       if (contact != null) {
-        await helper.updateContact(recContact);
+        await _helper.updateContact(recContact);
       } else {
-        await helper.saveContact(recContact);
+        await _helper.saveContact(recContact);
       }
       _getAllContacts();
     }
   }
 
   void _getAllContacts() {
-    helper.getAllContacts().then((list) => setState(() => contacts = list));
+    _helper.getAllContacts().then(
+      (list) {
+        List<Contact> sortedList = _sortList(_sort, list: list);
+        setState(() => _contacts = sortedList);
+      },
+    );
+  }
+
+  void _toggleSort() {
+    setState(() {
+      _sort = _sort == OrderOptions.orderAZ
+          ? OrderOptions.orderZA
+          : OrderOptions.orderAZ;
+    });
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            'Text ordenado de ${_sort == OrderOptions.orderAZ ? 'A-Z' : 'Z-A'}'),
+      ),
+    );
+
+    _sortList(_sort);
+  }
+
+  List<Contact> _sortList(OrderOptions order, {List<Contact>? list}) {
+    list = list ?? _contacts;
+    int Function(Contact, Contact)? sortFunction = _sort == OrderOptions.orderAZ
+        ? (Contact a, Contact b) =>
+            a.name.toLowerCase().compareTo(b.name.toLowerCase())
+        : (Contact a, Contact b) =>
+            b.name.toLowerCase().compareTo(a.name.toLowerCase());
+
+    return list..sort(sortFunction);
   }
 }
