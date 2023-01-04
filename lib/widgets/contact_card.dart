@@ -16,7 +16,7 @@ class ContactCard extends StatelessWidget {
   _getImage() {
     dynamic img;
 
-    final File file = File(contact.img!);
+    final File file = File(contact.img ?? '');
     if (file.existsSync()) {
       img = FileImage(file);
     } else {
@@ -43,31 +43,35 @@ class ContactCard extends StatelessWidget {
                   image: DecorationImage(image: _getImage()),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      contact.name,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        contact.name,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      contact.email,
-                      style: TextStyle(
-                        fontSize: 18,
+                      Text(
+                        contact.email,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                        overflow: TextOverflow.fade,
+                        maxLines: 2,
                       ),
-                    ),
-                    Text(
-                      contact.phone,
-                      style: TextStyle(
-                        fontSize: 18,
+                      Text(
+                        contact.phone,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
