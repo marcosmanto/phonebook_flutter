@@ -35,15 +35,20 @@ class _HomePageState extends State<HomePage> {
         itemCount: contacts.length,
         itemBuilder: (context, index) => ContactCard(
           contact: contacts[index],
+          onClick: _showContactPage,
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ContactPage(),
-          ),
-        ),
+        onPressed: () => _showContactPage(),
         child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _showContactPage([Contact? contact]) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ContactPage(contact: contact),
       ),
     );
   }

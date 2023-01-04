@@ -1,16 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:phonebook_flutter/pages/contact_page.dart';
-
 import '../helpers/contact_helper.dart';
 
 class ContactCard extends StatelessWidget {
   final Contact contact;
+  final void Function([Contact?]) onClick;
 
   const ContactCard({
     super.key,
     required this.contact,
+    required this.onClick,
   });
 
   _getImage() {
@@ -29,13 +29,7 @@ class ContactCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ContactPage(
-            contact: contact,
-          ),
-        ),
-      ),
+      onTap: () => onClick(contact),
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(10),
