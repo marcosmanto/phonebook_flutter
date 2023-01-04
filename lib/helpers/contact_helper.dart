@@ -108,7 +108,7 @@ class Contact {
   late String name;
   late String email;
   late String phone;
-  late String img;
+  String? img;
 
   Contact();
 

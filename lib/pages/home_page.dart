@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phonebook_flutter/helpers/contact_helper.dart';
+import 'package:phonebook_flutter/widgets/contact_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,9 +30,12 @@ class _HomePageState extends State<HomePage> {
         actions: [],
       ),
       body: ListView.builder(
-          padding: EdgeInsets.all(10),
-          itemCount: contacts.length,
-          itemBuilder: (context, index) => Container()),
+        padding: EdgeInsets.all(10),
+        itemCount: contacts.length,
+        itemBuilder: (context, index) => ContactCard(
+          contact: contacts[index],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Icon(Icons.add),
