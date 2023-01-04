@@ -35,13 +35,67 @@ class _HomePageState extends State<HomePage> {
         itemCount: contacts.length,
         itemBuilder: (context, index) => ContactCard(
           contact: contacts[index],
-          onClick: _showContactPage,
+          onClick: _showOptions,
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showContactPage(),
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  void _showOptions([Contact? contact]) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          height: 180,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(226, 255, 255, 255),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'Ligar',
+                  style: TextStyle(color: Colors.red, fontSize: 20),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _showContactPage(contact);
+                },
+                child: Text(
+                  'Editar',
+                  style: TextStyle(color: Colors.red, fontSize: 20),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  helper.deleteContact(contact!.id!);
+                  setState(
+                    () => contacts.removeWhere((item) => item.id == contact.id),
+                  );
+                },
+                child: Text(
+                  'Excluir',
+                  style: TextStyle(color: Colors.red, fontSize: 20),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
