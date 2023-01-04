@@ -52,74 +52,104 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          _editedContact.id != null ? _editedContact.name : 'Novo contato',
+    return WillPopScope(
+      onWillPop: _requestPop,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            _editedContact.id != null ? _editedContact.name : 'Novo contato',
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            GestureDetector(
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(image: _getImage()),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              GestureDetector(
+                child: Container(
+                  width: 140,
+                  height: 140,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: _getImage()),
+                  ),
                 ),
               ),
-            ),
-            TextField(
-              controller: _nameController,
-              focusNode: _nameFocus,
-              decoration: InputDecoration(labelText: 'Nome'),
-              onChanged: (text) {
-                setState(() {
+              TextField(
+                controller: _nameController,
+                focusNode: _nameFocus,
+                decoration: InputDecoration(labelText: 'Nome'),
+                onChanged: (text) {
+                  setState(() {
+                    _userEdited = true;
+                    _editedContact.name = text;
+                  });
+                },
+              ),
+              TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(labelText: 'Email'),
+                onChanged: (text) {
                   _userEdited = true;
-                  _editedContact.name = text;
-                });
-              },
-            ),
-            TextField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(labelText: 'Email'),
-              onChanged: (text) {
-                _userEdited = true;
-                _editedContact.email = text;
-              },
-            ),
-            TextField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              decoration: InputDecoration(labelText: 'Telefone'),
-              onChanged: (text) {
-                _userEdited = true;
-                _editedContact.phone = text;
-              },
-            ),
-          ],
+                  _editedContact.email = text;
+                },
+              ),
+              TextField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(labelText: 'Telefone'),
+                onChanged: (text) {
+                  _userEdited = true;
+                  _editedContact.phone = text;
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          try {
-            if (_editedContact.name.isNotEmpty) {
-              Navigator.of(context).pop(_editedContact);
-            } else {
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            try {
+              if (_editedContact.name.isNotEmpty) {
+                Navigator.of(context).pop(_editedContact);
+              } else {
+                _nameFocus.requestFocus();
+              }
+            } catch (_) {
               _nameFocus.requestFocus();
             }
-          } catch (_) {
-            _nameFocus.requestFocus();
-          }
-        },
-        child: Icon(Icons.save),
+          },
+          child: Icon(Icons.save),
+        ),
       ),
     );
+  }
+
+  Future<bool> _requestPop() {
+    if (_userEdited) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Descartar alterações?'),
+          content: Text('Se confirmar as alterações serão perdidas.'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Cancelar')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: Text('Sim')),
+          ],
+        ),
+      );
+      return Future.value(false);
+    } else {
+      // Record not edited, leave de page immediately
+      return Future.value(true);
+    }
   }
 }
