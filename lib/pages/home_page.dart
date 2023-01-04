@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phonebook_flutter/helpers/contact_helper.dart';
+import 'package:phonebook_flutter/pages/contact_page.dart';
 import 'package:phonebook_flutter/widgets/contact_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,7 +38,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ContactPage(),
+          ),
+        ),
         child: Icon(Icons.add),
       ),
     );
