@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:phonebook_flutter/helpers/contact_helper.dart';
 import 'package:phonebook_flutter/pages/contact_page.dart';
 import 'package:phonebook_flutter/widgets/contact_card.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -63,7 +65,10 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  launchUrlString('tel:${contact?.phone}');
+                  Navigator.of(context).pop();
+                },
                 child: Text(
                   'Ligar',
                   style: TextStyle(color: Colors.red, fontSize: 20),

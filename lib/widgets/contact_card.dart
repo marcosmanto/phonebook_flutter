@@ -40,7 +40,7 @@ class ContactCard extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  image: DecorationImage(image: _getImage()),
+                  image: DecorationImage(image: _getImage(), fit: BoxFit.cover),
                 ),
               ),
               Expanded(
